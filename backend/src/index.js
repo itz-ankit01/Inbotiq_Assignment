@@ -9,10 +9,32 @@ dotenv.config();
 const app = express();
 
 // Middleware
+const defaultAllowedOrigins = [
+  'http://localhost:3000',
+  'https://inbotiq-assignment-two.vercel.app',
+];
+
+const allowedOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(',')
+  : defaultAllowedOrigins;
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL 
-    ? process.env.FRONTEND_URL.split(',')
-    : ['http://localhost:3000','https://inbotiq-assignment-two.vercel.app/signup'],
+  origin: (origin, callback) => {
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    const isAllowed = allowedOrigins.some(
+      (allowedOrigin) =>
+        origin === allowedOrigin || origin.startsWith(`${allowedOrigin}/`)
+    );
+
+    if (isAllowed) {
+      return callback(null, true);
+    }
+
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
 };
 app.use(cors(corsOptions));
