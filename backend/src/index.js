@@ -12,7 +12,7 @@ const app = express();
 const corsOptions = {
   origin: process.env.FRONTEND_URL 
     ? process.env.FRONTEND_URL.split(',')
-    : ['http://localhost:3000'],
+    : ['http://localhost:3000','https://inbotiq-assignment-two.vercel.app/signup'],
   credentials: true,
 };
 app.use(cors(corsOptions));
